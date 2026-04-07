@@ -14,15 +14,15 @@ class CscsKey < Formula
   end
 
   BINARY_ALIASES = {
-    "aarch64-apple-darwin":     {},
-    "x86_64-unknown-linux-gnu": {},
+    "macos-aarch64":     {},
+    "linux-x86_64": {},
   }.freeze
 
   def target_triple
     cpu = Hardware::CPU.arm? ? "aarch64" : "x86_64"
-    os = OS.mac? ? "apple-darwin" : "unknown-linux-gnu"
+    os = OS.mac? ? "macos" : "linux"
 
-    "#{cpu}-#{os}"
+    "#{os}-#{cpu}"
   end
 
   def install_binary_aliases!
@@ -38,13 +38,5 @@ class CscsKey < Formula
     bin.install "cscs-key" if OS.linux? && Hardware::CPU.intel?
 
     install_binary_aliases!
-
-    # Homebrew will automatically install these, so we don't need to do that
-    doc_files = Dir["README.*", "readme.*", "LICENSE", "LICENSE.*", "CHANGELOG.*"]
-    leftover_contents = Dir["*"] - doc_files
-
-    # Install any leftover files in pkgshare; these are probably config or
-    # sample files.
-    pkgshare.install(*leftover_contents) unless leftover_contents.empty?
   end
 end
