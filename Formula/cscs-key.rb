@@ -1,16 +1,20 @@
 class CscsKey < Formula
   desc "CLI tool to manage SSH keys for the Swiss National Supercomputing Centre (CSCS)"
   homepage "https://github.com/eth-cscs/cscs-key/blob/master/README.md"
-  url "https://github.com/eth-cscs/cscs-key/archive/refs/tags/1.0.0.tar.gz"
-  sha256 "d31d72e6355b0e98fc2a6376b188e6ae91d0988c0d292e6d9a13fe8c324d6391"
+  revision 1
   head "https://github.com/eth-cscs/cscs-key.git", branch: "master"
+  stable do
+    url "https://github.com/eth-cscs/cscs-key/archive/refs/tags/1.0.0.tar.gz"
+    sha256 "d31d72e6355b0e98fc2a6376b188e6ae91d0988c0d292e6d9a13fe8c324d6391"
+    # Remove this block when updating to a new stable version, as OpenSSL
+    # is not required since https://github.com/eth-cscs/cscs-key/pull/11
+    on_linux do
+      depends_on "pkgconf" => :build
+      depends_on "openssl@3"
+    end
+  end
 
   depends_on "rust" => :build
-
-  on_linux do
-    depends_on "pkgconf" => :build
-    depends_on "openssl@3"
-  end
 
   def install
     system "cargo", "install", *std_cargo_args(path: ".")
